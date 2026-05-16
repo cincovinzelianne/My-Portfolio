@@ -1,0 +1,7 @@
+{
+    "github.copilot.chat.githubMcpServer.enabled": true,
+    "github.copilot.chat.githubMcpServer.lockdown": true,
+    "github.copilot.chat.githubMcpServer.readonly": true,
+    "github.copilot.chat.gpt54ConcisePrompt.enabled": true,
+    "github.copilot.chat.gpt55EconomicalSearchAndEdit.enabled": true
+}
