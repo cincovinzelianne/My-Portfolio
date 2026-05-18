@@ -245,14 +245,22 @@ function initParticles() {
 }
 
 // Button functionality
-window.downloadResume = function() {
+window.downloadResume = function(event) {
     // Create a download link for the resume
     const link = document.createElement('a');
-    link.href = 'My Resume.pdf'; // Points to My Resume.pdf in the same directory
+    // Use encodeURI to ensure spaces and special chars are safe
+    link.href = encodeURI('My Resume.pdf'); // Points to My Resume.pdf in the same directory
     link.download = 'My Resume.pdf';
     
-    // Add some visual feedback
-    const button = event.target.closest('.cyber-button');
+    // Add some visual feedback - fallback if event is not provided
+    let button = null;
+    if (event && event.target) {
+        button = event.target.closest && event.target.closest('.cyber-button');
+    }
+    if (!button) {
+        button = document.querySelector('.cyber-button.outline') || document.querySelector('.cyber-button');
+    }
+
     if (button) {
         button.style.transform = 'scale(0.95)';
         setTimeout(() => {
