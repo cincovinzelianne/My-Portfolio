@@ -738,9 +738,12 @@ body.lock-nav .side-nav { display: flex; left: 0.6rem; }
 }
 
 @media (max-width: 480px) {
-    /* stop marquee on very small screens to improve readability and performance */
-    .marquee-track { animation-play-state: paused; transform: none; display: flex; overflow-x: auto; gap: 0.8rem; }
-    .marquee-track::-webkit-scrollbar { height: 8px; }
+    .tech-marquee { padding: 1.5rem 0 3rem 0; }
+    .tech-badge { width: 6rem; height: 6rem; padding: 0.75rem; }
+    .tech-logo-svg { width: 2rem; height: 2rem; }
+    .tech-badge p { font-size: 0.7rem; margin-top: 0.4rem; }
+    .marquee-track { gap: 0.7rem; animation-duration: 18s; }
+    .marquee-group { gap: 0.7rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
