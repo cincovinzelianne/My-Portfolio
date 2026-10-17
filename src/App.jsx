@@ -1188,6 +1188,9 @@ function App() {
         <AnimatePresence>
           {lightboxImage && (
             <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label={`Full image: ${lightboxImage.title}`}
               className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/90 p-4 backdrop-blur-md sm:p-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1195,10 +1198,15 @@ function App() {
               transition={{ duration: 0.2 }}
               onClick={() => setLightboxImage(null)}
             >
+              <button
+                type="button"
+                onClick={() => setLightboxImage(null)}
+                aria-label="Close full image"
+                className="absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 sm:right-6 sm:top-6"
+              >
+                <X size={20} />
+              </button>
               <motion.section
-                role="dialog"
-                aria-modal="true"
-                aria-label={`Full image: ${lightboxImage.title}`}
                 className="relative flex max-h-full w-full max-w-7xl flex-col items-center"
                 initial={{ opacity: 0, scale: 0.97, y: 12 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -1206,14 +1214,6 @@ function App() {
                 transition={{ duration: 0.22, ease: "easeOut" }}
                 onClick={(event) => event.stopPropagation()}
               >
-                <button
-                  type="button"
-                  onClick={() => setLightboxImage(null)}
-                  aria-label="Close full image"
-                  className="absolute -top-3 right-0 z-10 grid h-11 w-11 translate-y-[-100%] place-items-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 sm:right-0"
-                >
-                  <X size={20} />
-                </button>
                 <img
                   src={lightboxImage.src}
                   alt={lightboxImage.alt}
