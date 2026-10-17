@@ -103,7 +103,7 @@ function Reveal({ children, className = "", ...attributes }) {
 
 function SectionIntro({ eyebrow, title, description, dark = false, className = "" }) {
   return (
-    <div className={`mb-12 max-w-2xl md:mb-16 ${dark ? "text-white" : ""} ${className}`}>
+    <div data-section-intro className={`mb-12 max-w-2xl md:mb-16 ${dark ? "text-white" : ""} ${className}`}>
       <p className={`eyebrow mb-4 ${dark ? "text-lime" : ""}`}>{eyebrow}</p>
       <h2 className="font-display text-4xl font-bold leading-[1.1] tracking-[-0.055em] sm:text-5xl md:text-6xl">
         {title}
@@ -308,6 +308,7 @@ function App() {
     const media = gsap.matchMedia();
 
     media.add("(prefers-reduced-motion: no-preference)", () => {
+      ScrollTrigger.config({ ignoreMobileResize: true });
       const context = gsap.context(() => {
         const progress = appRef.current?.querySelector("[data-scroll-progress]");
         if (progress) {
@@ -349,18 +350,22 @@ function App() {
         const hero = appRef.current?.querySelector("#home");
         const portrait = appRef.current?.querySelector(".portrait-card");
         const heroOrb = appRef.current?.querySelector("[data-hero-orb]");
+        const heroCopy = hero?.querySelector(".gsap-hero-intro");
         if (hero && portrait && heroOrb) {
           const heroMotion = gsap.timeline({
             scrollTrigger: {
               trigger: hero,
               start: "top top",
-              end: "bottom top",
-              scrub: 0.7,
+              end: "bottom 15%",
+              scrub: 1.15,
             },
           });
           heroMotion
-            .to(portrait, { yPercent: -13, rotation: 2.5, scale: 0.96, ease: "none" }, 0)
-            .to(heroOrb, { yPercent: 35, xPercent: -12, scale: 1.18, ease: "none" }, 0);
+            .to(portrait, { yPercent: -18, rotation: 2.2, scale: 0.95, ease: "none" }, 0)
+            .to(heroOrb, { yPercent: 42, xPercent: -14, scale: 1.2, ease: "none" }, 0);
+          if (heroCopy) {
+            heroMotion.to(heroCopy, { yPercent: -12, autoAlpha: 0.25, ease: "none" }, 0);
+          }
         }
 
         gsap.utils
@@ -368,36 +373,61 @@ function App() {
           .forEach((element) => {
             gsap.fromTo(
               element,
-              { autoAlpha: 0, y: 38 },
+              { autoAlpha: 0, y: 48, filter: "blur(6px)" },
               {
                 autoAlpha: 1,
                 y: 0,
-                duration: 0.8,
+                filter: "blur(0px)",
+                duration: 0.95,
                 ease: "power3.out",
                 scrollTrigger: {
                   trigger: element,
-                  start: "top 88%",
+                  start: "top 86%",
                   toggleActions: "play none none reverse",
+                  fastScrollEnd: true,
                 },
               },
             );
           });
 
+        gsap.utils.toArray("[data-section-intro]", appRef.current).forEach((intro) => {
+          const elements = intro.querySelectorAll(".eyebrow, h2, p:not(.eyebrow)");
+          if (!elements.length) return;
+          gsap.fromTo(
+            elements,
+            { autoAlpha: 0, y: 26, filter: "blur(5px)" },
+            {
+              autoAlpha: 1,
+              y: 0,
+              filter: "blur(0px)",
+              duration: 0.72,
+              stagger: 0.11,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: intro,
+                start: "top 82%",
+                toggleActions: "play none none reverse",
+              },
+            },
+          );
+        });
+
         const serviceCards = gsap.utils.toArray("[data-service-card]", appRef.current);
         if (serviceCards.length) {
           gsap.fromTo(
             serviceCards,
-            { autoAlpha: 0, y: 70, rotateX: 9, transformPerspective: 900 },
+            { autoAlpha: 0, y: 76, rotateX: 8, scale: 0.97, transformPerspective: 1000 },
             {
               autoAlpha: 1,
               y: 0,
               rotateX: 0,
-              duration: 0.85,
-              stagger: 0.16,
+              scale: 1,
+              duration: 0.9,
+              stagger: 0.18,
               ease: "power3.out",
               scrollTrigger: {
                 trigger: serviceCards[0].parentElement,
-                start: "top 78%",
+                start: "top 80%",
                 toggleActions: "play none none reverse",
               },
             },
@@ -443,59 +473,80 @@ function App() {
           );
         }
 
-        const workSection = appRef.current?.querySelector("#work");
-        const projectImage = appRef.current?.querySelector("[data-scroll-parallax]");
-        if (projectImage && workSection) {
+        gsap.utils.toArray(".project-card", appRef.current).forEach((card, index) => {
           gsap.fromTo(
-            projectImage,
-            { yPercent: 10, scale: 1.2, transformOrigin: "center center" },
-            {
-              yPercent: -10,
-              scale: 1.08,
-              ease: "none",
-              scrollTrigger: {
-                trigger: workSection,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 0.6,
-              },
-            },
-          );
-          gsap.fromTo(
-            projectImage.closest(".project-image"),
-            { clipPath: "inset(8% 8% 8% 8% round 28px)" },
-            {
-              clipPath: "inset(0% 0% 0% 0% round 0px)",
-              ease: "none",
-              scrollTrigger: {
-                trigger: workSection,
-                start: "top 85%",
-                end: "center center",
-                scrub: 0.7,
-              },
-            },
-          );
-        }
-
-        const featureTags = gsap.utils.toArray("[data-feature-tag]", appRef.current);
-        if (featureTags.length && workSection) {
-          gsap.fromTo(
-            featureTags,
-            { autoAlpha: 0, y: 16 },
+            card,
+            { autoAlpha: 0, y: 64, scale: 0.975, rotateX: 2.5, transformPerspective: 1200 },
             {
               autoAlpha: 1,
               y: 0,
-              duration: 0.35,
-              stagger: 0.07,
-              ease: "power2.out",
+              scale: 1,
+              rotateX: 0,
+              duration: 0.9,
+              delay: index === 0 ? 0 : 0.04,
+              ease: "power3.out",
               scrollTrigger: {
-                trigger: workSection,
-                start: "top 55%",
+                trigger: card,
+                start: "top 84%",
                 toggleActions: "play none none reverse",
               },
             },
           );
-        }
+
+          const visual = card.querySelector(".project-image, [data-project-visual]");
+          const image = visual?.querySelector("img");
+          if (visual && image) {
+            gsap.fromTo(
+              visual,
+              { clipPath: "inset(7% 5% 7% 5% round 26px)" },
+              {
+                clipPath: "inset(0% 0% 0% 0% round 0px)",
+                ease: "none",
+                scrollTrigger: {
+                  trigger: card,
+                  start: "top 88%",
+                  end: "top 30%",
+                  scrub: 0.9,
+                },
+              },
+            );
+            gsap.fromTo(
+              image,
+              { scale: index === 0 ? 1.12 : 1.06, yPercent: 4 },
+              {
+                scale: 1,
+                yPercent: 0,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: card,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: 1.1,
+                },
+              },
+            );
+          }
+
+          const tags = card.querySelectorAll("[data-feature-tag]");
+          if (tags.length) {
+            gsap.fromTo(
+              tags,
+              { autoAlpha: 0, y: 14 },
+              {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.42,
+                stagger: 0.055,
+                ease: "power2.out",
+                scrollTrigger: {
+                  trigger: card,
+                  start: "top 66%",
+                  toggleActions: "play none none reverse",
+                },
+              },
+            );
+          }
+        });
 
         const contactDecoration = appRef.current?.querySelector("[data-contact-decoration]");
         const contact = appRef.current?.querySelector("#contact");
@@ -508,7 +559,7 @@ function App() {
               trigger: contact,
               start: "top bottom",
               end: "bottom top",
-              scrub: 1,
+              scrub: 1.15,
             },
           });
         }
@@ -524,13 +575,21 @@ function App() {
             pin: processCard,
             pinSpacing: true,
             invalidateOnRefresh: true,
+            anticipatePin: 1,
           });
 
           return () => pin.kill();
         });
       }, appRef.current);
 
-      return () => context.revert();
+      const refresh = () => ScrollTrigger.refresh();
+      requestAnimationFrame(refresh);
+      window.addEventListener("load", refresh, { once: true });
+
+      return () => {
+        window.removeEventListener("load", refresh);
+        context.revert();
+      };
     });
 
     return () => media.revert();
@@ -943,8 +1002,7 @@ function App() {
                   <img
                     src="/pic/llcc_site.png"
                     alt="Screenshot of the Lapu-Lapu City College website"
-                    className="absolute inset-0 h-full w-full scale-[1.12] object-cover object-top"
-                    data-scroll-parallax
+                    className="absolute inset-0 h-full w-full object-cover object-top"
                     loading="lazy"
                   />
                   <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full border border-white/30 bg-ink/75 px-3.5 py-2 text-[10px] font-bold uppercase tracking-[0.15em] text-white backdrop-blur">
@@ -996,6 +1054,7 @@ function App() {
                 <article className="project-card h-full overflow-hidden rounded-[28px] border border-line bg-white shadow-sm transition duration-300 hover:shadow-card">
                   <button
                     type="button"
+                    data-project-visual
                     className="group relative flex h-[300px] w-full cursor-zoom-in items-center justify-center overflow-hidden bg-[#f2f6fb] text-left sm:h-[360px]"
                     onClick={() => setLightboxImage({
                       src: "/project-images/clinic-inventory.png",
@@ -1053,6 +1112,7 @@ function App() {
                 <article className="project-card h-full overflow-hidden rounded-[28px] border border-line bg-white shadow-sm transition duration-300 hover:shadow-card">
                   <button
                     type="button"
+                    data-project-visual
                     className="group relative flex h-[300px] w-full cursor-zoom-in items-center justify-center overflow-hidden bg-[#edf5fc] text-left sm:h-[360px]"
                     onClick={() => setLightboxImage({
                       src: "/project-images/knowles-connect.png",
