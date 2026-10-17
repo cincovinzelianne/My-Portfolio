@@ -473,80 +473,59 @@ function App() {
           );
         }
 
-        gsap.utils.toArray(".project-card", appRef.current).forEach((card, index) => {
+        const workSection = appRef.current?.querySelector("#work");
+        const projectImage = appRef.current?.querySelector("[data-scroll-parallax]");
+        if (projectImage && workSection) {
           gsap.fromTo(
-            card,
-            { autoAlpha: 0, y: 64, scale: 0.975, rotateX: 2.5, transformPerspective: 1200 },
+            projectImage,
+            { yPercent: 10, scale: 1.2, transformOrigin: "center center" },
+            {
+              yPercent: -10,
+              scale: 1.08,
+              ease: "none",
+              scrollTrigger: {
+                trigger: workSection,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 0.6,
+              },
+            },
+          );
+          gsap.fromTo(
+            projectImage.closest(".project-image"),
+            { clipPath: "inset(8% 8% 8% 8% round 28px)" },
+            {
+              clipPath: "inset(0% 0% 0% 0% round 0px)",
+              ease: "none",
+              scrollTrigger: {
+                trigger: workSection,
+                start: "top 85%",
+                end: "center center",
+                scrub: 0.7,
+              },
+            },
+          );
+        }
+
+        const featureTags = gsap.utils.toArray("[data-feature-tag]", appRef.current);
+        if (featureTags.length && workSection) {
+          gsap.fromTo(
+            featureTags,
+            { autoAlpha: 0, y: 16 },
             {
               autoAlpha: 1,
               y: 0,
-              scale: 1,
-              rotateX: 0,
-              duration: 0.9,
-              delay: index === 0 ? 0 : 0.04,
-              ease: "power3.out",
+              duration: 0.35,
+              stagger: 0.07,
+              ease: "power2.out",
               scrollTrigger: {
-                trigger: card,
-                start: "top 84%",
+                trigger: workSection,
+                start: "top 55%",
                 toggleActions: "play none none reverse",
               },
             },
           );
-
-          const visual = card.querySelector(".project-image, [data-project-visual]");
-          const image = visual?.querySelector("img");
-          if (visual && image) {
-            gsap.fromTo(
-              visual,
-              { clipPath: "inset(7% 5% 7% 5% round 26px)" },
-              {
-                clipPath: "inset(0% 0% 0% 0% round 0px)",
-                ease: "none",
-                scrollTrigger: {
-                  trigger: card,
-                  start: "top 88%",
-                  end: "top 30%",
-                  scrub: 0.9,
-                },
-              },
-            );
-            gsap.fromTo(
-              image,
-              { scale: index === 0 ? 1.12 : 1.06, yPercent: 4 },
-              {
-                scale: 1,
-                yPercent: 0,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: card,
-                  start: "top bottom",
-                  end: "bottom top",
-                  scrub: 1.1,
-                },
-              },
-            );
-          }
-
-          const tags = card.querySelectorAll("[data-feature-tag]");
-          if (tags.length) {
-            gsap.fromTo(
-              tags,
-              { autoAlpha: 0, y: 14 },
-              {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.42,
-                stagger: 0.055,
-                ease: "power2.out",
-                scrollTrigger: {
-                  trigger: card,
-                  start: "top 66%",
-                  toggleActions: "play none none reverse",
-                },
-              },
-            );
-          }
-        });
+        }
 
         const contactDecoration = appRef.current?.querySelector("[data-contact-decoration]");
         const contact = appRef.current?.querySelector("#contact");
@@ -559,7 +538,7 @@ function App() {
               trigger: contact,
               start: "top bottom",
               end: "bottom top",
-              scrub: 1.15,
+              scrub: 1,
             },
           });
         }
@@ -575,21 +554,13 @@ function App() {
             pin: processCard,
             pinSpacing: true,
             invalidateOnRefresh: true,
-            anticipatePin: 1,
           });
 
           return () => pin.kill();
         });
       }, appRef.current);
 
-      const refresh = () => ScrollTrigger.refresh();
-      requestAnimationFrame(refresh);
-      window.addEventListener("load", refresh, { once: true });
-
-      return () => {
-        window.removeEventListener("load", refresh);
-        context.revert();
-      };
+      return () => context.revert();
     });
 
     return () => media.revert();
@@ -1002,7 +973,8 @@ function App() {
                   <img
                     src="/pic/llcc_site.png"
                     alt="Screenshot of the Lapu-Lapu City College website"
-                    className="absolute inset-0 h-full w-full object-cover object-top"
+                    className="absolute inset-0 h-full w-full scale-[1.12] object-cover object-top"
+                    data-scroll-parallax
                     loading="lazy"
                   />
                   <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full border border-white/30 bg-ink/75 px-3.5 py-2 text-[10px] font-bold uppercase tracking-[0.15em] text-white backdrop-blur">
@@ -1054,7 +1026,6 @@ function App() {
                 <article className="project-card h-full overflow-hidden rounded-[28px] border border-line bg-white shadow-sm transition duration-300 hover:shadow-card">
                   <button
                     type="button"
-                    data-project-visual
                     className="group relative flex h-[300px] w-full cursor-zoom-in items-center justify-center overflow-hidden bg-[#f2f6fb] text-left sm:h-[360px]"
                     onClick={() => setLightboxImage({
                       src: "/project-images/clinic-inventory.png",
@@ -1112,7 +1083,6 @@ function App() {
                 <article className="project-card h-full overflow-hidden rounded-[28px] border border-line bg-white shadow-sm transition duration-300 hover:shadow-card">
                   <button
                     type="button"
-                    data-project-visual
                     className="group relative flex h-[300px] w-full cursor-zoom-in items-center justify-center overflow-hidden bg-[#edf5fc] text-left sm:h-[360px]"
                     onClick={() => setLightboxImage({
                       src: "/project-images/knowles-connect.png",
@@ -1135,7 +1105,7 @@ function App() {
                       <Maximize2 size={18} />
                     </span>
                   </button>
-                  <div className="p-7 sm:p-9">
+x                  <div className="p-7 sm:p-9">
                     <div className="mb-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#739451]">
                       <span>Featured project</span>
                       <span className="h-px w-8 bg-[#c8d5c0]" />
