@@ -913,8 +913,8 @@ function App() {
             <Reveal>
               <SectionIntro
                 eyebrow="Selected work"
-                title={<>One project. Made to matter.</>}
-                description="A closer look at a real-world project where thoughtful design meets a meaningful digital presence."
+                title={<>Projects made to matter.</>}
+                description="A selection of digital experiences built to make information more useful, connected, and accessible."
               />
             </Reveal>
             <Reveal>
@@ -977,6 +977,116 @@ function App() {
                 </div>
               </article>
             </Reveal>
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+              <Reveal>
+                <article className="project-card h-full overflow-hidden rounded-[28px] border border-line bg-white shadow-sm transition duration-300 hover:shadow-card">
+                  <div className="relative flex h-[300px] items-center justify-center overflow-hidden bg-[#f2f6fb] sm:h-[360px]">
+                    <img
+                      src="/project-images/clinic-inventory.png"
+                      alt="Clinic Inventory System dashboard showing clinic operations and stock monitoring"
+                      className="h-full w-full object-contain"
+                      loading="lazy"
+                    />
+                    <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-3.5 py-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#356bb5] shadow-sm backdrop-blur">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#4386df]" />
+                      Ongoing development
+                    </span>
+                  </div>
+                  <div className="p-7 sm:p-9">
+                    <div className="mb-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#739451]">
+                      <span>Featured project</span>
+                      <span className="h-px w-8 bg-[#c8d5c0]" />
+                      <span>Clinic operations</span>
+                    </div>
+                    <h3 className="font-display text-2xl font-extrabold leading-tight tracking-[-0.06em] sm:text-3xl">
+                      Clinic Inventory System
+                    </h3>
+                    <p className="mt-4 text-sm leading-7 text-muted">
+                      A desktop application designed to digitize manual clinic logbooks and
+                      streamline medicine inventory management. It features stock monitoring,
+                      medicine batch and expiration tracking, employee ID-based medicine requests,
+                      request history and frequency monitoring, and analytics to identify medicine
+                      demand trends. The system aims to improve record accuracy, simplify clinic
+                      operations, and support safer, more efficient inventory management.
+                    </p>
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      {["C#", "ASP.NET Core", "React.js", "Tailwind CSS", "MySQL"].map((tech) => (
+                        <span
+                          key={tech}
+                          data-feature-tag
+                          className="rounded-full bg-[#f0f3ed] px-3 py-1.5 text-[11px] font-semibold text-[#59645c]"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+              <Reveal>
+                <article className="project-card h-full overflow-hidden rounded-[28px] border border-line bg-white shadow-sm transition duration-300 hover:shadow-card">
+                  <div className="relative flex h-[300px] items-center justify-center overflow-hidden bg-[#edf5fc] sm:h-[360px]">
+                    <img
+                      src="/project-images/knowles-connect.png"
+                      alt="Knowles Connect digital bulletin board displayed on a screen"
+                      className="h-full w-full object-contain"
+                      loading="lazy"
+                    />
+                    <span className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-3.5 py-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#356bb5] shadow-sm backdrop-blur">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#4386df]" />
+                      Developed during OJT
+                    </span>
+                  </div>
+                  <div className="p-7 sm:p-9">
+                    <div className="mb-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#739451]">
+                      <span>Featured project</span>
+                      <span className="h-px w-8 bg-[#c8d5c0]" />
+                      <span>Digital workplace solution</span>
+                    </div>
+                    <h3 className="font-display text-2xl font-extrabold leading-tight tracking-[-0.06em] sm:text-3xl">
+                      Knowles Connect
+                      <span className="mt-1 block text-lg font-semibold tracking-[-0.03em] text-muted sm:text-xl">
+                        Digital Interactive Bulletin Board
+                      </span>
+                    </h3>
+                    <p className="mt-4 text-sm leading-7 text-muted">
+                      Knowles Connect was developed during my On-the-Job Training (OJT) at Knowles
+                      Electronics Philippines to replace paper-based announcements with a
+                      centralized, interactive display. It features dynamic content publishing and
+                      real-time updates for company announcements, upcoming events, featured memos,
+                      compensation and benefits (CompBen), and employee awards and recognition.
+                      The system aims to improve workplace communication, streamline information
+                      sharing, and give employees convenient access to important company updates.
+                    </p>
+                    <p className="mt-6 text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
+                      Tech stack
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {["PHP", "Laravel", "React.js", "Custom CSS", "PostgreSQL via Supabase", "Docker", "Redis"].map((tech) => (
+                        <span
+                          key={tech}
+                          data-feature-tag
+                          className="rounded-full bg-[#f0f3ed] px-3 py-1.5 text-[11px] font-semibold text-[#59645c]"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {["OJT project", "Knowles Electronics Philippines", "Digital workplace"].map((detail) => (
+                        <span
+                          key={detail}
+                          data-feature-tag
+                          className="rounded-full bg-[#f0f3ed] px-3 py-1.5 text-[11px] font-semibold text-[#59645c]"
+                        >
+                          {detail}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            </div>
           </div>
         </section>
 
