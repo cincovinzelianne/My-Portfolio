@@ -1,15 +1,16 @@
 Deployment instructions
 
 Netlify
-- Drag & drop the project folder to Netlify Sites, or connect your Git repository.
-- Ensure the publish directory is the repository root (default) and no build command is required.
+- Connect your Git repository and set the build command to `npm run build`.
+- Set the publish directory to `dist`.
 - `_redirects` is included to route SPA paths to `index.html`.
 
 Vercel
-- Import the project and deploy; Vercel will detect a static site.
+- Import the project; Vercel will detect the Vite build.
+- Set the build command to `npm run build` and the output directory to `dist`.
 - `vercel.json` rewrites routes to `index.html` for SPA behavior.
 
 Notes
-- The main entrypoint is `index.html`.
-- Asset paths were normalized to forward slashes for cross-platform hosting.
-- `script.js` was hardened for the resume download flow.
+- The app is built with React, Vite, and Tailwind CSS.
+- Run `npm run dev` for local development and `npm run build` to create the production site in `dist`.
+- The résumé and project imagery are served from the repository root.
