@@ -308,7 +308,6 @@ function App() {
     const media = gsap.matchMedia();
 
     media.add("(prefers-reduced-motion: no-preference)", () => {
-      ScrollTrigger.config({ ignoreMobileResize: true });
       const context = gsap.context(() => {
         const progress = appRef.current?.querySelector("[data-scroll-progress]");
         if (progress) {
@@ -560,7 +559,15 @@ function App() {
         });
       }, appRef.current);
 
-      return () => context.revert();
+      const refreshOnOrientationChange = () => ScrollTrigger.refresh();
+      const refreshFrame = window.requestAnimationFrame(() => ScrollTrigger.refresh());
+      window.addEventListener("orientationchange", refreshOnOrientationChange);
+
+      return () => {
+        window.cancelAnimationFrame(refreshFrame);
+        window.removeEventListener("orientationchange", refreshOnOrientationChange);
+        context.revert();
+      };
     });
 
     return () => media.revert();
