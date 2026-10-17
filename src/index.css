@@ -199,6 +199,194 @@ button {
   isolation: isolate;
 }
 
+.stack-section {
+  position: relative;
+  isolation: isolate;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-position: center top;
+  background-size: 54px 54px;
+}
+
+.stack-section::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse at 50% 60%, rgba(22, 136, 174, 0.11), transparent 62%);
+  content: "";
+  pointer-events: none;
+}
+
+.tech-carousel {
+  padding-bottom: 1rem;
+}
+
+.tech-carousel-viewport {
+  overflow: hidden;
+  padding: 1.25rem 0;
+  outline: none;
+  touch-action: pan-y;
+}
+
+.tech-carousel-viewport:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 3px;
+}
+
+.tech-carousel-track {
+  display: flex;
+  width: max-content;
+  align-items: stretch;
+  gap: clamp(0.875rem, 2vw, 1.5rem);
+  padding: 0.15rem 0;
+  will-change: transform;
+}
+
+.tech-carousel-card {
+  position: relative;
+  display: flex;
+  flex: 0 0 clamp(9.25rem, 15vw, 12rem);
+  aspect-ratio: 1 / 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.125rem;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+    rgba(255, 255, 255, 0.035);
+  color: #f1f5f9;
+  cursor: pointer;
+  transition:
+    border-color 240ms ease,
+    background-color 240ms ease,
+    box-shadow 240ms ease,
+    opacity 240ms ease,
+    transform 240ms ease;
+}
+
+.tech-carousel-card::before {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 34%, color-mix(in srgb, var(--tech-accent), transparent 87%), transparent 55%);
+  content: "";
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.tech-carousel-card:hover,
+.tech-carousel-card.is-active {
+  border-color: rgba(34, 211, 238, 0.82);
+  background-color: rgba(255, 255, 255, 0.085);
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.12),
+    0 16px 50px rgba(0, 0, 0, 0.24),
+    0 0 32px rgba(34, 211, 238, 0.08);
+}
+
+.tech-carousel-card:hover::before,
+.tech-carousel-card.is-active::before {
+  opacity: 1;
+}
+
+.tech-carousel-card:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 4px;
+}
+
+.tech-card-logo {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: contain;
+}
+
+.tech-card-name {
+  position: relative;
+  z-index: 1;
+  max-width: calc(100% - 1rem);
+  overflow: hidden;
+  color: rgba(241, 245, 249, 0.88);
+  font-size: clamp(0.7rem, 1.3vw, 0.86rem);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tech-carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 0;
+}
+
+.tech-carousel-control {
+  display: grid;
+  width: 2.625rem;
+  height: 2.625rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+  color: #e2e8f0;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.tech-carousel-control:hover {
+  transform: translateY(-2px);
+  border-color: rgba(34, 211, 238, 0.65);
+  background: rgba(34, 211, 238, 0.11);
+  color: #67e8f9;
+}
+
+.tech-carousel-control:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 3px;
+}
+
+.tech-carousel-pagination {
+  display: flex;
+  min-width: 7rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  color: rgba(226, 232, 240, 0.56);
+  font-size: 0.65rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.tech-carousel-pagination > span:first-child {
+  color: #67e8f9;
+}
+
+.tech-carousel-pagination-track {
+  width: 3.25rem;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.tech-carousel-pagination-track > span {
+  display: block;
+  height: 100%;
+  background: #22d3ee;
+  transition: width 350ms ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -207,5 +395,25 @@ button {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .tech-carousel-card {
+    flex-basis: 9rem;
+  }
+
+  .tech-carousel-controls {
+    gap: 0.55rem;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .mobile-menu-panel {
+    padding-top: 1rem;
+  }
+
+  .mobile-menu-panel .mobile-nav-link {
+    min-height: 3.25rem;
   }
 }

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { createPortal } from "react-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -30,18 +30,24 @@ const navigation = [
   { label: "Work", href: "#work" },
 ];
 const skills = [
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "React",
-  "PHP",
-  "Laravel",
-  "MySQL",
-  "Tailwind CSS",
-  "Bootstrap",
-  "Node.js",
-  "Git",
-  "Supabase",
+  { name: "HTML", logo: "/tech-logos/html5.svg", color: "#f97316" },
+  { name: "CSS", logo: "/tech-logos/css3.svg", color: "#38bdf8" },
+  { name: "JavaScript", logo: "/tech-logos/javascript.svg", color: "#facc15" },
+  { name: "TypeScript", logo: "/tech-logos/typescript.svg", color: "#60a5fa" },
+  { name: "React", logo: "/tech-logos/react.svg", color: "#38bdf8" },
+  { name: "PHP", logo: "/tech-logos/php.svg", color: "#a78bfa" },
+  { name: "Laravel", logo: "/tech-logos/laravel.svg", color: "#fb7185" },
+  { name: "Node.js", logo: "/tech-logos/nodejs.svg", color: "#86efac" },
+  { name: "MySQL", logo: "/tech-logos/mysql.svg", color: "#38bdf8" },
+  { name: "PostgreSQL", logo: "/tech-logos/postgresql.svg", color: "#60a5fa" },
+  { name: "Redis", logo: "/tech-logos/redis.svg", color: "#f87171" },
+  { name: "Docker", logo: "/tech-logos/docker.svg", color: "#38bdf8" },
+  { name: "Tailwind CSS", logo: "/tech-logos/tailwindcss.svg", color: "#22d3ee" },
+  { name: "Bootstrap", logo: "/tech-logos/bootstrap.svg", color: "#c084fc" },
+  { name: "MS Power Automate", logo: "/tech-logos/power-automate.png", color: "#818cf8" },
+  { name: "Git", logo: "/tech-logos/git.svg", color: "#fb923c" },
+  { name: "GitHub", logo: "/tech-logos/github.svg", color: "#f8fafc" },
+  { name: "Supabase", logo: "/tech-logos/supabase.svg", color: "#4ade80" },
 ];
 const services = [
   {
@@ -94,9 +100,9 @@ function Reveal({ children, className = "", ...attributes }) {
   );
 }
 
-function SectionIntro({ eyebrow, title, description, dark = false }) {
+function SectionIntro({ eyebrow, title, description, dark = false, className = "" }) {
   return (
-    <div className={`mb-12 max-w-2xl md:mb-16 ${dark ? "text-white" : ""}`}>
+    <div className={`mb-12 max-w-2xl md:mb-16 ${dark ? "text-white" : ""} ${className}`}>
       <p className={`eyebrow mb-4 ${dark ? "text-lime" : ""}`}>{eyebrow}</p>
       <h2 className="font-display text-4xl font-bold leading-[1.1] tracking-[-0.055em] sm:text-5xl md:text-6xl">
         {title}
@@ -104,6 +110,188 @@ function SectionIntro({ eyebrow, title, description, dark = false }) {
       <p className={`mt-5 max-w-xl text-base leading-7 md:text-lg ${dark ? "text-white/65" : "text-muted"}`}>
         {description}
       </p>
+    </div>
+  );
+}
+
+function TechStackCarousel() {
+  const viewportRef = useRef(null);
+  const trackRef = useRef(null);
+  const activeRef = useRef(skills.length);
+  const touchStartRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(skills.length);
+  const [inView, setInView] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const slides = [...skills, ...skills, ...skills];
+
+  const getOffset = useCallback((index) => {
+    const viewport = viewportRef.current;
+    const card = trackRef.current?.querySelector(`[data-carousel-index="${index}"]`);
+    if (!viewport || !card) return 0;
+    return viewport.clientWidth / 2 - (card.offsetLeft + card.offsetWidth / 2);
+  }, []);
+
+  const moveTo = useCallback((index, instant = false) => {
+    const track = trackRef.current;
+    if (!track) return;
+    activeRef.current = index;
+    setActiveIndex(index);
+    gsap.killTweensOf(track);
+    gsap.to(track, {
+      x: getOffset(index),
+      duration: instant || reduceMotion ? 0 : 1.1,
+      ease: "none",
+      overwrite: true,
+      onComplete: () => {
+        const count = skills.length;
+        const normalized = index < count ? index + count : index >= count * 2 ? index - count : index;
+        if (normalized !== index) {
+          gsap.set(track, { x: getOffset(normalized) });
+          activeRef.current = normalized;
+          setActiveIndex(normalized);
+        }
+      },
+    });
+  }, [getOffset, reduceMotion]);
+
+  const step = useCallback((direction) => {
+    const count = skills.length;
+    let current = activeRef.current;
+
+    if (direction > 0 && current >= count * 2 - 1) {
+      current -= count;
+      gsap.set(trackRef.current, { x: getOffset(current) });
+      activeRef.current = current;
+      setActiveIndex(current);
+    } else if (direction < 0 && current <= count) {
+      current += count;
+      gsap.set(trackRef.current, { x: getOffset(current) });
+      activeRef.current = current;
+      setActiveIndex(current);
+    }
+
+    const next = current + direction;
+    moveTo(next);
+  }, [getOffset, moveTo]);
+
+  function selectSlide(index) {
+    const count = skills.length;
+    const currentGroup = Math.floor(activeRef.current / count);
+    let target = currentGroup * count + index;
+    if (target - activeRef.current > count / 2) target -= count;
+    if (activeRef.current - target > count / 2) target += count;
+    while (target < 0) target += count;
+    while (target >= count * 3) target -= count;
+    moveTo(target);
+  }
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+    if (!viewport || !track) return undefined;
+
+    gsap.set(track, { x: getOffset(activeRef.current) });
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.12 },
+    );
+    observer.observe(viewport);
+    const resize = () => gsap.set(track, { x: getOffset(activeRef.current) });
+    window.addEventListener("resize", resize);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", resize);
+      gsap.killTweensOf(track);
+    };
+  }, [getOffset]);
+
+  useEffect(() => {
+    if (!inView || reduceMotion) return undefined;
+    step(1);
+    const timer = window.setInterval(() => step(1), 1100);
+    return () => window.clearInterval(timer);
+  }, [inView, reduceMotion, step]);
+
+  function handleKeyDown(event) {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      step(-1);
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      step(1);
+    }
+  }
+
+  return (
+    <div className="tech-carousel relative">
+      <div
+        ref={viewportRef}
+        className="tech-carousel-viewport"
+        role="region"
+        aria-label="Technology stack carousel"
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        onTouchStart={(event) => {
+          touchStartRef.current = event.touches[0]?.clientX ?? null;
+        }}
+        onTouchEnd={(event) => {
+          if (touchStartRef.current === null) return;
+          const distance = event.changedTouches[0].clientX - touchStartRef.current;
+          if (Math.abs(distance) > 44) step(distance < 0 ? 1 : -1);
+          touchStartRef.current = null;
+        }}
+      >
+        <div ref={trackRef} className="tech-carousel-track">
+          {slides.map((technology, virtualIndex) => {
+            const isActive = virtualIndex === activeIndex;
+            const distance = Math.abs(virtualIndex - activeIndex);
+            return (
+              <button
+                key={`${technology.name}-${virtualIndex}`}
+                type="button"
+                data-carousel-index={virtualIndex}
+                aria-label={`${technology.name}${isActive ? ", current slide" : ", go to slide"}`}
+                aria-current={isActive ? "true" : undefined}
+                tabIndex={virtualIndex >= skills.length && virtualIndex < skills.length * 2 ? 0 : -1}
+                onClick={() => selectSlide(virtualIndex % skills.length)}
+                className={`tech-carousel-card group ${isActive ? "is-active" : ""}`}
+                style={{
+                  "--tech-accent": technology.color,
+                  opacity: isActive ? 1 : Math.max(0.48, 1 - distance * 0.13),
+                  transform: `scale(${isActive ? 1 : Math.max(0.88, 1 - distance * 0.035)})`,
+                }}
+              >
+                <img className="tech-card-logo" src={technology.logo} alt={`${technology.name} logo`} draggable="false" />
+                <span className="tech-card-name">{technology.name}</span>
+                <span className="sr-only">Technology {virtualIndex % skills.length + 1} of {skills.length}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div className="tech-carousel-controls">
+        <button
+          type="button"
+          className="tech-carousel-control"
+          aria-label="Previous technology"
+          onClick={() => step(-1)}
+        >
+          <ArrowRight className="rotate-180" size={17} />
+        </button>
+        <div className="tech-carousel-pagination" aria-live="polite">
+          <span>{String(activeIndex % skills.length + 1).padStart(2, "0")}</span>
+          <span className="tech-carousel-pagination-track"><span style={{ width: `${((activeIndex % skills.length + 1) / skills.length) * 100}%` }} /></span>
+          <span>{String(skills.length).padStart(2, "0")}</span>
+        </div>
+        <button
+          type="button"
+          className="tech-carousel-control"
+          aria-label="Next technology"
+          onClick={() => step(1)}
+        >
+          <ArrowRight size={17} />
+        </button>
+      </div>
     </div>
   );
 }
@@ -214,22 +402,19 @@ function App() {
           );
         }
 
-        const skillChips = gsap.utils.toArray("[data-scroll-chip]", appRef.current);
-        const stackCloud = appRef.current?.querySelector("#stack .stack-cloud");
-        if (skillChips.length && stackCloud) {
+        const skillChips = gsap.utils.toArray("[data-carousel-intro]", appRef.current);
+        if (skillChips.length) {
           gsap.fromTo(
             skillChips,
-            { autoAlpha: 0, y: 18, scale: 0.94 },
+            { autoAlpha: 0, y: 36 },
             {
               autoAlpha: 1,
               y: 0,
-              scale: 1,
-              duration: 0.45,
-              stagger: 0.055,
-              ease: "power2.out",
+              duration: 0.75,
+              ease: "power3.out",
               scrollTrigger: {
-                trigger: stackCloud,
-                start: "top 84%",
+                trigger: "#stack",
+                start: "top 68%",
                 toggleActions: "play none none reverse",
               },
             },
@@ -671,28 +856,21 @@ function App() {
           </div>
         </section>
 
-        <section id="stack" className="scroll-mt-24 bg-ink px-5 py-24 text-white sm:px-8 md:py-32 lg:px-12">
-          <div className="mx-auto grid max-w-7xl gap-14 md:grid-cols-[0.95fr_1.05fr] md:items-center md:gap-20">
+        <section id="stack" className="stack-section scroll-mt-24 bg-ink px-0 py-24 text-white sm:py-28 md:py-32">
+          <div className="mx-auto max-w-7xl">
             <Reveal>
               <SectionIntro
-                eyebrow="The tools I work with"
-                title={<>A flexible toolkit. A thoughtful finish.</>}
-                description="I choose the right tools for the job and keep learning as the web moves forward."
+                eyebrow="Built with the right tools"
+                title={<>Tech <span className="text-cyan-400">Stack</span></>}
+                description="A growing toolkit for shaping thoughtful, high-performance digital experiences."
                 dark
+                className="mx-auto px-5 text-center sm:px-8"
               />
-              <div className="stack-cloud flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <span
-                    key={skill}
-                    data-scroll-chip
-                    className="rounded-full border border-white/15 bg-white/[0.055] px-4 py-2.5 text-sm font-medium text-white/80 transition hover:border-lime/60 hover:bg-lime/10 hover:text-lime"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
             </Reveal>
-            <Reveal data-process-card className="gsap-pin">
+            <Reveal data-carousel-intro>
+              <TechStackCarousel />
+            </Reveal>
+            <Reveal data-process-card className="gsap-pin mx-auto mt-16 max-w-2xl px-5 sm:px-8 md:mt-20">
               <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.055] p-7 sm:p-10">
                 <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-lime/10 blur-3xl" />
                 <div className="relative">
