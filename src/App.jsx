@@ -602,14 +602,16 @@ function App() {
             href="#home"
             onClick={closeMenu}
             className="group flex items-center gap-3"
-            aria-label="Vinze Cinco, home"
+            aria-label="Vinze Lianne Cinco, home"
           >
-            <span className="grid h-10 w-10 place-items-center rounded-full bg-ink font-display text-sm font-extrabold text-lime transition-transform group-hover:rotate-[-8deg]">
-              VC
-            </span>
+            <img
+              src="/pic/pic.jpeg"
+              alt=""
+              className="h-10 w-10 rounded-full object-cover object-[50%_22%] ring-2 ring-white transition-transform group-hover:rotate-[-8deg]"
+            />
             <span className="leading-tight">
               <span className="block font-display text-sm font-extrabold tracking-[-0.03em]">
-                Vinze Cinco
+                Vinze Lianne Cinco
               </span>
               <span className="mt-1 block text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
                 Developer & designer
@@ -775,7 +777,7 @@ function App() {
               <div className="absolute left-0 top-[15%] grid h-12 w-12 place-items-center rounded-full bg-lime text-ink shadow-card sm:h-14 sm:w-14">
                 <Asterisk size={27} strokeWidth={1.7} />
               </div>
-              <div className="absolute -right-2 top-[32%] rounded-full border border-white/60 bg-white/85 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-ink shadow-card backdrop-blur-sm sm:right-0 sm:text-xs">
+              <div className="absolute -right-2 bottom-[20%] rounded-full border border-white/60 bg-white/85 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-ink shadow-card backdrop-blur-sm sm:right-0 sm:text-xs">
                 Design · Develop · Deliver
               </div>
             </div>
@@ -1011,7 +1013,7 @@ function App() {
       <footer className="border-t border-line bg-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-7 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-12">
           <a href="#home" className="font-display text-sm font-extrabold tracking-tight">
-            Vinze Cinco<span className="text-[#739451]">.</span>
+            Vinze Lianne Cinco<span className="text-[#739451]">.</span>
           </a>
           <p className="text-xs text-muted">© {new Date().getFullYear()} Vinze Lianne Cinco. Made with care.</p>
           <div className="flex items-center gap-4">
