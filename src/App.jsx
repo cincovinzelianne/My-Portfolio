@@ -15,6 +15,7 @@ import {
   Facebook,
   Github,
   Layers3,
+  Maximize2,
   Mail,
   Menu,
   PenTool,
@@ -299,6 +300,7 @@ function TechStackCarousel() {
 function App() {
   const appRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState(null);
   const [activeSection, setActiveSection] = useState("home");
   const [notice, setNotice] = useState("");
 
@@ -460,7 +462,7 @@ function App() {
             },
           );
           gsap.fromTo(
-            projectImage.closest("a"),
+            projectImage.closest(".project-image"),
             { clipPath: "inset(8% 8% 8% 8% round 28px)" },
             {
               clipPath: "inset(0% 0% 0% 0% round 0px)",
@@ -557,7 +559,7 @@ function App() {
   }, [notice]);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    document.body.style.overflow = menuOpen || lightboxImage ? "hidden" : "";
     if (!menuOpen) return undefined;
 
     const closeOnEscape = (event) => {
@@ -573,7 +575,16 @@ function App() {
       window.removeEventListener("resize", closeOnDesktop);
       document.body.style.overflow = "";
     };
-  }, [menuOpen]);
+  }, [lightboxImage, menuOpen]);
+
+  useEffect(() => {
+    if (!lightboxImage) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setLightboxImage(null);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [lightboxImage]);
 
   async function copyEmail() {
     try {
@@ -919,12 +930,15 @@ function App() {
             </Reveal>
             <Reveal>
               <article className="project-card overflow-hidden rounded-[28px] border border-line bg-white shadow-sm transition duration-300 hover:shadow-card md:grid md:grid-cols-[1.12fr_0.88fr]">
-                <a
-                  className="project-image group relative block min-h-[280px] overflow-hidden bg-[#172f5f] md:min-h-[470px]"
-                  href="https://llcc.edu.ph/"
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Visit the Lapu-Lapu City College website"
+                <button
+                  type="button"
+                  className="project-image group relative block min-h-[280px] w-full cursor-zoom-in overflow-hidden bg-[#172f5f] text-left md:min-h-[470px]"
+                  onClick={() => setLightboxImage({
+                    src: "/pic/llcc_site.png",
+                    alt: "Screenshot of the Lapu-Lapu City College website",
+                    title: "Lapu-Lapu City College",
+                  })}
+                  aria-label="View full image: Lapu-Lapu City College website screenshot"
                 >
                   <img
                     src="/pic/llcc_site.png"
@@ -938,9 +952,9 @@ function App() {
                     Live website
                   </span>
                   <span className="absolute bottom-5 right-5 grid h-12 w-12 place-items-center rounded-full bg-lime text-ink opacity-0 shadow-lg transition duration-300 group-hover:opacity-100">
-                    <ArrowUpRight size={20} />
+                    <Maximize2 size={19} />
                   </span>
-                </a>
+                </button>
                 <div className="flex flex-col justify-center p-7 sm:p-10 md:p-12">
                   <div className="mb-7 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#739451]">
                     <span>Featured project</span>
@@ -980,7 +994,16 @@ function App() {
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
               <Reveal>
                 <article className="project-card h-full overflow-hidden rounded-[28px] border border-line bg-white shadow-sm transition duration-300 hover:shadow-card">
-                  <div className="relative flex h-[300px] items-center justify-center overflow-hidden bg-[#f2f6fb] sm:h-[360px]">
+                  <button
+                    type="button"
+                    className="group relative flex h-[300px] w-full cursor-zoom-in items-center justify-center overflow-hidden bg-[#f2f6fb] text-left sm:h-[360px]"
+                    onClick={() => setLightboxImage({
+                      src: "/project-images/clinic-inventory.png",
+                      alt: "Clinic Inventory System dashboard showing clinic operations and stock monitoring",
+                      title: "Clinic Inventory System",
+                    })}
+                    aria-label="View full image: Clinic Inventory System"
+                  >
                     <img
                       src="/project-images/clinic-inventory.png"
                       alt="Clinic Inventory System dashboard showing clinic operations and stock monitoring"
@@ -991,7 +1014,10 @@ function App() {
                       <span className="h-1.5 w-1.5 rounded-full bg-[#4386df]" />
                       Ongoing development
                     </span>
-                  </div>
+                    <span className="absolute bottom-5 right-5 grid h-11 w-11 place-items-center rounded-full bg-white/95 text-ink opacity-0 shadow-lg transition duration-300 group-hover:opacity-100">
+                      <Maximize2 size={18} />
+                    </span>
+                  </button>
                   <div className="p-7 sm:p-9">
                     <div className="mb-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#739451]">
                       <span>Featured project</span>
@@ -1025,7 +1051,16 @@ function App() {
               </Reveal>
               <Reveal>
                 <article className="project-card h-full overflow-hidden rounded-[28px] border border-line bg-white shadow-sm transition duration-300 hover:shadow-card">
-                  <div className="relative flex h-[300px] items-center justify-center overflow-hidden bg-[#edf5fc] sm:h-[360px]">
+                  <button
+                    type="button"
+                    className="group relative flex h-[300px] w-full cursor-zoom-in items-center justify-center overflow-hidden bg-[#edf5fc] text-left sm:h-[360px]"
+                    onClick={() => setLightboxImage({
+                      src: "/project-images/knowles-connect.png",
+                      alt: "Knowles Connect digital bulletin board displayed on a screen",
+                      title: "Knowles Connect — Digital Interactive Bulletin Board",
+                    })}
+                    aria-label="View full image: Knowles Connect digital bulletin board"
+                  >
                     <img
                       src="/project-images/knowles-connect.png"
                       alt="Knowles Connect digital bulletin board displayed on a screen"
@@ -1036,7 +1071,10 @@ function App() {
                       <span className="h-1.5 w-1.5 rounded-full bg-[#4386df]" />
                       Developed during OJT
                     </span>
-                  </div>
+                    <span className="absolute bottom-5 right-5 grid h-11 w-11 place-items-center rounded-full bg-white/95 text-ink opacity-0 shadow-lg transition duration-300 group-hover:opacity-100">
+                      <Maximize2 size={18} />
+                    </span>
+                  </button>
                   <div className="p-7 sm:p-9">
                     <div className="mb-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#739451]">
                       <span>Featured project</span>
@@ -1145,6 +1183,51 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {createPortal(
+        <AnimatePresence>
+          {lightboxImage && (
+            <motion.div
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/90 p-4 backdrop-blur-md sm:p-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setLightboxImage(null)}
+            >
+              <motion.section
+                role="dialog"
+                aria-modal="true"
+                aria-label={`Full image: ${lightboxImage.title}`}
+                className="relative flex max-h-full w-full max-w-7xl flex-col items-center"
+                initial={{ opacity: 0, scale: 0.97, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.98, y: 8 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  onClick={() => setLightboxImage(null)}
+                  aria-label="Close full image"
+                  className="absolute -top-3 right-0 z-10 grid h-11 w-11 translate-y-[-100%] place-items-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 sm:right-0"
+                >
+                  <X size={20} />
+                </button>
+                <img
+                  src={lightboxImage.src}
+                  alt={lightboxImage.alt}
+                  className="max-h-[calc(100dvh-7rem)] max-w-full rounded-xl object-contain shadow-2xl"
+                />
+                <p className="mt-4 text-center text-sm font-medium text-white/80">
+                  {lightboxImage.title}
+                </p>
+              </motion.section>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
 
       <AnimatePresence>
         {notice && (
