@@ -23,7 +23,7 @@ import {
   X,
 } from "lucide-react";
 
-const email = "cinco.vinzelianne@llcc.edu.ph";
+const email = "vinzelianne2020@gmail.com";
 const navigation = [
   { label: "About", href: "#about" },
   { label: "Services", href: "#services" },
