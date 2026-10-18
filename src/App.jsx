@@ -779,10 +779,10 @@ function App() {
                 </a>
                 <a
                   href="/My%20Resume.pdf"
-                  download="Vinze-Lianne-Cinco-Resume.pdf"
+                  download="My Resume.pdf"
                   className="button-light"
                 >
-                  View résumé <ArrowDown size={16} />
+                  View Resume <ArrowDown size={16} />
                 </a>
               </div>
               <div className="mt-10 flex items-center gap-4">
@@ -800,7 +800,7 @@ function App() {
                     </a>
                   ))}
                   <a
-                    href={`mailto:${email}`}
+                    href={`mailto:vinzzelianne2020@gmail.com?subject=${encodeURIComponent("Portfolio inquiry")}&body=${encodeURIComponent("Dear Vinze,\n\nI came across your portfolio and would like to get in touch.\n\n[Write your message here]\n\nBest regards,\n[Your name]")}`}
                     aria-label="Email me"
                     className="grid h-10 w-10 place-items-center rounded-full border-[3px] border-paper bg-white text-ink transition hover:-translate-y-1 hover:bg-lime"
                   >
